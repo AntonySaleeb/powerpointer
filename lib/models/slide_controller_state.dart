@@ -24,6 +24,7 @@ class SlideControllerState extends Equatable {
   final double pointerX; // Position as percentage (0-100)
   final double pointerY; // Position as percentage (0-100)
   final bool isPointerMode; // Touch-based laser pointer mode
+  final int slideImageTimestamp; // Force rebuild on every update
 
   const SlideControllerState({
     this.connectionStatus = ConnectionStatus.disconnected,
@@ -46,6 +47,7 @@ class SlideControllerState extends Equatable {
     this.pointerX = 50.0,
     this.pointerY = 50.0,
     this.isPointerMode = false,
+    this.slideImageTimestamp = 0,
   });
 
   SlideControllerState copyWith({
@@ -69,6 +71,7 @@ class SlideControllerState extends Equatable {
     double? pointerX,
     double? pointerY,
     bool? isPointerMode,
+    int? slideImageTimestamp,
   }) {
     return SlideControllerState(
       connectionStatus: connectionStatus ?? this.connectionStatus,
@@ -91,6 +94,7 @@ class SlideControllerState extends Equatable {
       pointerX: pointerX ?? this.pointerX,
       pointerY: pointerY ?? this.pointerY,
       isPointerMode: isPointerMode ?? this.isPointerMode,
+      slideImageTimestamp: slideImageTimestamp ?? this.slideImageTimestamp,
     );
   }
 
@@ -116,5 +120,6 @@ class SlideControllerState extends Equatable {
         pointerX,
         pointerY,
         isPointerMode,
+        slideImageTimestamp, // Force rebuild when timestamp changes
       ];
 }

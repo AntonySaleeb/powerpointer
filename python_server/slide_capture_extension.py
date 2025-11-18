@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 class SlideCaptureExtension:
     def __init__(self):
         self.capture_enabled = False
-        self.capture_quality = 70  # Better quality for readable text
-        self.capture_scale = 0.6   # Larger size for better visibility
+        self.capture_quality = 75  # Higher quality for better clarity
+        self.capture_scale = 0.65   # Slightly larger for better readability
         self.last_screenshot_time = 0
         self.screenshot_cache = None
         self.last_screenshot_hash = None  # For duplicate detection
@@ -196,17 +196,18 @@ class SlideCaptureExtension:
             logger.error(f"❌ Failed to broadcast slide update: {e}")
     
     async def start_live_streaming(self, websockets_clients):
-        """Start continuous live streaming of slides"""
+        """Start continuous live streaming of slides as backup"""
         self.streaming_active = True
-        logger.info("🎥 LIVE STREAMING STARTED - Capturing every 300ms (3.3 fps)")
+        logger.info("🎥 LIVE STREAMING STARTED - Background sync every 500ms")
+        logger.info(f"📱 Connected clients: {len(websockets_clients)}")
         
         while self.streaming_active and self.capture_enabled:
             try:
                 # Capture and broadcast with force (always send, no hash check)
                 await self.broadcast_slide_update(websockets_clients, force=True)
                 
-                # Wait 300ms before next capture (3.3 fps - faster updates)
-                await asyncio.sleep(0.3)
+                # Wait 500ms before next capture (backup sync - commands trigger instant captures)
+                await asyncio.sleep(0.5)
                 
             except Exception as e:
                 logger.error(f"❌ Streaming error: {e}")
@@ -239,10 +240,16 @@ async def on_keystroke(websockets_clients, slide_number):
     await slide_capture.broadcast_slide_update(websockets_clients, slide_number)
 
 async def on_keystroke_force(websockets_clients, slide_number):
-    """Call this after any keystroke - but with live streaming, this is just a fallback"""
-    # With live streaming active, captures happen automatically every 400ms
-    # This is just a fallback for immediate capture
-    pass  # Live streaming handles everything!
+    """IMMEDIATE capture after keystroke - don't wait for next streaming frame!"""
+    try:
+        # Small delay to let PowerPoint transition complete
+        await asyncio.sleep(0.05)  # 50ms - just enough for slide to render
+        
+        # Force immediate capture and broadcast
+        await slide_capture.broadcast_slide_update(websockets_clients, force=True)
+        logger.info(f"⚡ INSTANT capture triggered for slide {slide_number}")
+    except Exception as e:
+        logger.error(f"❌ Error in immediate capture: {e}")
 
 async def on_presentation_start(websockets_clients):
     """Call this when presentation starts"""

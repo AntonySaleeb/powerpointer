@@ -578,6 +578,7 @@ class SlideControllerBloc extends Bloc<SlideControllerEvent, SlideControllerStat
       currentSlideImageData: event.imageData,
       hasSlideImage: event.imageData != null,
       currentSlide: event.slideNumber ?? state.currentSlide,
+      slideImageTimestamp: DateTime.now().millisecondsSinceEpoch, // Force rebuild
     ));
   }
 

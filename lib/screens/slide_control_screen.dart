@@ -1017,6 +1017,9 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                   bytes,
                   fit: BoxFit.contain, // Maintain aspect ratio
                   filterQuality: FilterQuality.high,
+                  gaplessPlayback: true, // Smooth updates without flickering
+                  cacheWidth: null, // Don't cache, always use latest
+                  cacheHeight: null, // Don't cache, always use latest
                 ),
               ),
               
@@ -1252,8 +1255,8 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
       child: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(isTablet ? 40 * scale : 20 * scale),
-          child: Column(
-            children: [
+      child: Column(
+        children: [
               SizedBox(height: screenSize.height * 0.05),
               
               // Hero Section with Logo and Animation
@@ -1364,9 +1367,9 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
         SizedBox(height: 12 * scale),
         
         // Subtitle with Features
-        Text(
+          Text(
           'Professional PowerPoint Control',
-          style: TextStyle(
+            style: TextStyle(
             color: state.settings.isDarkMode 
                 ? Colors.white.withOpacity(0.9)
                 : const Color(0xFF475569),
@@ -1523,10 +1526,10 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                         ),
                       ),
                       SizedBox(height: 4 * scale),
-                      Text(
-                        'Enter your computer\'s IP address',
-                        style: TextStyle(
-                          color: state.settings.isDarkMode 
+          Text(
+            'Enter your computer\'s IP address',
+            style: TextStyle(
+              color: state.settings.isDarkMode 
                               ? Colors.white.withOpacity(0.7)
                               : const Color(0xFF64748B),
                           fontSize: (isTablet ? 15 : 13) * scale,
@@ -1542,7 +1545,7 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
             SizedBox(height: 28 * scale),
             
             // Recent Connections - Pill Style
-            if (state.connectionHistory.isNotEmpty) ...[
+          if (state.connectionHistory.isNotEmpty) ...[
               Row(
                 children: [
                   Icon(
@@ -1551,11 +1554,11 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                     color: const Color(0xFF3B82F6),
                   ),
                   SizedBox(width: 8 * scale),
-                  Text(
+            Text(
                     'Recent Connections',
-                    style: TextStyle(
+              style: TextStyle(
                       color: state.settings.isDarkMode ? Colors.white : const Color(0xFF0F172A),
-                      fontSize: (isTablet ? 16 : 14) * scale,
+                fontSize: (isTablet ? 16 : 14) * scale,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -1563,24 +1566,24 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
               ),
               SizedBox(height: 14 * scale),
               SizedBox(
-                height: 50 * scale,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: state.connectionHistory.length > 3 ? 3 : state.connectionHistory.length,
-                  itemBuilder: (context, index) {
-                    final ip = state.connectionHistory[index];
-                    return Padding(
+              height: 50 * scale,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: state.connectionHistory.length > 3 ? 3 : state.connectionHistory.length,
+                itemBuilder: (context, index) {
+                  final ip = state.connectionHistory[index];
+                  return Padding(
                       padding: EdgeInsets.only(right: 10 * scale),
                       child: GestureDetector(
-                        onTap: () {
-                          ipController.text = ip;
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
+                      onTap: () {
+                        ipController.text = ip;
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
                             horizontal: 18 * scale,
                             vertical: 12 * scale,
-                          ),
-                          decoration: BoxDecoration(
+                        ),
+                        decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
                                 const Color(0xFF3B82F6).withOpacity(0.15),
@@ -1588,7 +1591,7 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                               ],
                             ),
                             borderRadius: BorderRadius.circular(14 * scale),
-                            border: Border.all(
+                          border: Border.all(
                               color: const Color(0xFF3B82F6).withOpacity(0.3),
                               width: 1.5,
                             ),
@@ -1603,27 +1606,27 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                               ),
                               SizedBox(width: 8 * scale),
                               Text(
-                                ip,
-                                style: TextStyle(
+                          ip,
+                          style: TextStyle(
                                   color: state.settings.isDarkMode 
                                       ? Colors.white 
                                       : const Color(0xFF1E40AF),
                                   fontSize: (isTablet ? 14 : 12) * scale,
                                   fontWeight: FontWeight.w600,
-                                  fontFamily: 'monospace',
-                                ),
+                            fontFamily: 'monospace',
+                          ),
                               ),
                             ],
-                          ),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-              SizedBox(height: 24 * scale),
-            ],
-            
+            ),
+            SizedBox(height: 24 * scale),
+          ],
+          
             // IP Input Section - Large & Premium
             Row(
               children: [
@@ -1645,9 +1648,9 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
             ),
             SizedBox(height: 14 * scale),
             
-            Row(
-              children: [
-                Expanded(
+          Row(
+            children: [
+              Expanded(
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -1674,18 +1677,18 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                         ),
                       ],
                     ),
-                    child: TextField(
-                      controller: ipController,
-                      style: TextStyle(
+                child: TextField(
+                  controller: ipController,
+                  style: TextStyle(
                         color: state.settings.isDarkMode ? Colors.white : const Color(0xFF0F172A),
                         fontSize: (isTablet ? 19 : 17) * scale,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'monospace',
                         letterSpacing: 0.5,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: '192.168.1.100',
-                        hintStyle: TextStyle(
+                  ),
+                  decoration: InputDecoration(
+                    hintText: '192.168.1.100',
+                    hintStyle: TextStyle(
                           color: state.settings.isDarkMode 
                               ? Colors.white.withOpacity(0.3)
                               : const Color(0xFF94A3B8),
@@ -1705,8 +1708,8 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                             ? IconButton(
                                 icon: Icon(
                                   Icons.clear_rounded,
-                                  color: state.settings.isDarkMode 
-                                      ? Colors.white.withOpacity(0.5)
+                      color: state.settings.isDarkMode 
+                          ? Colors.white.withOpacity(0.5)
                                       : const Color(0xFF94A3B8),
                                   size: 22 * scale,
                                 ),
@@ -1720,56 +1723,56 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                           horizontal: 20 * scale,
                           vertical: 22 * scale,
                         ),
-                      ),
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    ),
                   ),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    ),
                 ),
-                SizedBox(width: 12 * scale),
+              ),
+              SizedBox(width: 12 * scale),
                 // QR Scanner Button - Gradient
-                Container(
+              Container(
                   height: (isTablet ? 70 : 64) * scale,
                   width: (isTablet ? 70 : 64) * scale,
-                  decoration: BoxDecoration(
+                decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
                         Color(0xFF3B82F6),
                         Color(0xFF2563EB),
-                      ],
-                    ),
+                    ],
+                  ),
                     borderRadius: BorderRadius.circular(18 * scale),
-                    boxShadow: [
-                      BoxShadow(
+                  boxShadow: [
+                    BoxShadow(
                         color: const Color(0xFF3B82F6).withOpacity(0.4),
                         blurRadius: 12 * scale,
                         spreadRadius: 0,
                         offset: Offset(0, 4 * scale),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
                       borderRadius: BorderRadius.circular(18 * scale),
-                      onTap: () => _openQRScanner(context),
-                      child: Icon(
+                    onTap: () => _openQRScanner(context),
+                    child: Icon(
                         Icons.qr_code_scanner_rounded,
-                        color: Colors.white,
+                      color: Colors.white,
                         size: (isTablet ? 32 : 28) * scale,
-                      ),
                     ),
                   ),
                 ),
-              ],
+              ),
+            ],
             ),
           
-            SizedBox(height: 24 * scale),
+          SizedBox(height: 24 * scale),
           
             // Error Message - Modern
-            if (state.errorMessage != null)
-              Container(
+          if (state.errorMessage != null)
+            Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(16 * scale),
                 decoration: BoxDecoration(
@@ -1789,8 +1792,8 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                   children: [
                     Container(
                       padding: EdgeInsets.all(8 * scale),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.2),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.2),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -1801,9 +1804,9 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                     ),
                     SizedBox(width: 12 * scale),
                     Expanded(
-                      child: Text(
-                        state.errorMessage!,
-                        style: TextStyle(
+              child: Text(
+                state.errorMessage!,
+                style: TextStyle(
                           color: state.settings.isDarkMode 
                               ? Colors.red.shade300
                               : Colors.red.shade700,
@@ -1820,7 +1823,7 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
           
             // Connect Button - Large Gradient
             Container(
-              width: double.infinity,
+            width: double.infinity,
               height: (isTablet ? 68 : 62) * scale,
               decoration: BoxDecoration(
                 gradient: (state.connectionStatus == ConnectionStatus.connecting ||
@@ -1865,17 +1868,17 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                   borderRadius: BorderRadius.circular(18 * scale),
                   onTap: (state.connectionStatus == ConnectionStatus.connecting ||
                          state.connectionStatus == ConnectionStatus.reconnecting)
-                      ? null
-                      : () {
-                          if (ipController.text.isNotEmpty) {
-                            context.read<SlideControllerBloc>().add(
-                                  ConnectToServer(ipController.text),
-                                );
-                          }
-                        },
+                  ? null
+                  : () {
+                      if (ipController.text.isNotEmpty) {
+                        context.read<SlideControllerBloc>().add(
+                              ConnectToServer(ipController.text),
+                            );
+                      }
+                    },
                   child: Center(
-                    child: (state.connectionStatus == ConnectionStatus.connecting ||
-                            state.connectionStatus == ConnectionStatus.reconnecting)
+              child: (state.connectionStatus == ConnectionStatus.connecting ||
+                      state.connectionStatus == ConnectionStatus.reconnecting)
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -1912,10 +1915,10 @@ class _SlideControlScreenState extends State<SlideControlScreen> {
                               SizedBox(width: 12 * scale),
                               Text(
                                 'Connect to PC',
-                                style: TextStyle(
+                      style: TextStyle(
                                   fontSize: (isTablet ? 22 : 19) * scale,
                                   fontWeight: FontWeight.w800,
-                                  color: Colors.white,
+                        color: Colors.white,
                                   letterSpacing: 0.5,
                                 ),
                     ),

@@ -4,54 +4,45 @@ import '../bloc/slide_controller_bloc.dart';
 import '../bloc/slide_controller_event.dart';
 import '../models/slide_controller_state.dart';
 
-/// Simple touch-based laser pointer
-class TouchLaserPointer extends StatefulWidget {
+class TouchLaserPointer extends StatelessWidget {
   const TouchLaserPointer({super.key});
 
-  @override
-  State<TouchLaserPointer> createState() => _TouchLaserPointerState();
-}
-
-class _TouchLaserPointerState extends State<TouchLaserPointer> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SlideControllerBloc, SlideControllerState>(
       builder: (context, state) {
-        if (!state.isPresenting) {
-          return const SizedBox.shrink();
-        }
-
-        return GestureDetector(
-          onTap: _togglePointerMode,
-          child: Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: state.isPointerMode ? Colors.red : Colors.grey,
-              boxShadow: [
-                BoxShadow(
-                  color: (state.isPointerMode ? Colors.red : Colors.grey).withOpacity(0.5),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                ),
-              ],
+        final scale = state.settings.uiScale;
+        
+        return ElevatedButton.icon(
+          onPressed: () {
+            context.read<SlideControllerBloc>().add(TogglePointerMode());
+          },
+          icon: Icon(
+            state.isPointerMode ? Icons.touch_app : Icons.touch_app_outlined,
+            size: 16 * scale,
+          ),
+          label: Text(
+            'Pointer',
+            style: TextStyle(
+              fontSize: 14 * scale,
             ),
-            child: Center(
-              child: Icon(
-                Icons.radio_button_checked,
-                color: Colors.white,
-                size: 30,
-              ),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: state.isPointerMode 
+                ? Colors.red.shade700 
+                : Colors.blue.shade700,
+            foregroundColor: Colors.white,
+            padding: EdgeInsets.symmetric(
+              horizontal: 24 * scale,
+              vertical: 12 * scale,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20 * scale),
             ),
           ),
         );
       },
     );
   }
-
-  void _togglePointerMode() {
-    // Send pointer mode state to BLoC
-    context.read<SlideControllerBloc>().add(TogglePointerMode());
-  }
 }
+
